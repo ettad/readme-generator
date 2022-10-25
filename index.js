@@ -3,58 +3,53 @@ const inquirer = require('inquirer');
 const fs = require('fs')
 const generateMarkdown = require('./utils/generateMarkdown');
 
+// questions that will be displyed in the CLI   
 const questions = [
 
     {
         name: 'title',
         type: 'input',
-        message: "What is your project title?"
+        message: "What is the title of your project?"
     },
 
     {
         name: 'discription',
         type: 'input',
-        message:`Provide a short description of your project. 
-        
-        Use the following questions as a guide:
-
-        - What was your motivation?
-        - Why did you build this project? 
-        - What problem does it solve?`
+        message: "What is the discription for your project?"
     },
 
     {
         name: 'installation',
         type: 'input',
-        message: "What are the steps required to install your project? Provide a step-by-step description of how to get the development environment running."
+        message: "What are the installation instructions for your projects?"
     },
 
     {
         name: 'usage',
         type: 'input',
-        message: "Provide instructions and examples on how to use your application."
+        message: "What is the usage information for your project?"
     },
 
     {
         name: 'contribution',
         type: 'input',
-        message: "What is the title of your project?"
+        message: "What are the contribution guidelines for your project?"
     },
 
     {
         name: 'test',
         type: 'input',
-        message: "What is the title of your project?"
+        message: "What are the test instructions for your project?"
     },
 
     {
         name: 'license',
         type: 'list',
-        message: "What license would you like to use for your application?",
+        message: "What license do you want for your project?",
         choices: [
-            'Apple',
-            'Orange',
-            'Banana',
+            'Apache 2.0',
+            'BSD 3-Clause',
+            'MIT',
         ]
     },
 
@@ -67,23 +62,26 @@ const questions = [
     { 
         name: 'email',
         type: 'input',
-        message: 'What is your email?'
+        message: 'What is your email address?'
     },
 ];
 
+// generate README.md file
 function writeToFile(fileName, data) {
-    fs.writeFile('README.md', data, err=> {
-        if (err) {
-            console.log(err)
-        }
-    })
+    fs.writeFile(fileName, data, (err) =>
+    err ? console.error(err) : console.log('Success!')
+    );
 }
+
 
 function init() {
-    inquirer.prompt(questions)
-    .then(response => {
-        console.log(response)
-    })
+    inquirer
+        .prompt(questions)
+        
+        .then(answers => {
+        markdown = generateMarkdown(answers);
+        writeToFile("README.md", markdown);
+    });
 }
 
-init();
+init(); 
